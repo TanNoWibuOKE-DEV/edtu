@@ -20,7 +20,12 @@ try {
   run(`git commit -m "${msg}"`);
   console.log(`📝 Đã commit: "${msg}"`);
 
-  console.log('🚀 Đang push lên branch main...');
+  console.log('🚀 Đang đồng bộ và push lên branch main...');
+  try {
+    run('git pull --rebase origin main');
+  } catch (rebaseErr) {
+    console.warn('⚠️ Ghi chú rebase:', rebaseErr.message);
+  }
   run('git push origin main');
   console.log('✨ Đồng bộ thành công lên https://github.com/TanNoWibuOKE-DEV/edtu.git!');
 } catch (error) {
