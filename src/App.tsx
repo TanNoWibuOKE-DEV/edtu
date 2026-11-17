@@ -524,6 +524,98 @@ function Workspace({ auth }: { auth: AuthState }) {
       <div className="content-area">
         <PageView role={role} section={section} session={auth.session} />
       </div>
+
+      {/* MOBILE BOTTOM NAVIGATION BAR (Hiển thị mượt mà trên điện thoại và máy tính bảng) */}
+      <nav className="mobile-bottom-bar" aria-label="Điều hướng nhanh di động">
+        {role === 'student' && <>
+          <Link to="/student/dashboard" className={`mobile-tab ${section === 'dashboard' ? 'active' : ''}`}>
+            <LayoutDashboard size={20} />
+            <span>Tổng quan</span>
+          </Link>
+          <Link to="/student/schedule" className={`mobile-tab ${section === 'schedule' ? 'active' : ''}`}>
+            <CalendarDays size={20} />
+            <span>Lịch học</span>
+          </Link>
+          <Link to="/student/grades" className={`mobile-tab ${section === 'grades' ? 'active' : ''}`}>
+            <TableProperties size={20} />
+            <span>Điểm thi</span>
+          </Link>
+          <Link to="/student/profile" className={`mobile-tab ${section === 'profile' ? 'active' : ''}`}>
+            <UserRound size={20} />
+            <span>Thẻ SV</span>
+          </Link>
+          <button type="button" className="mobile-tab" onClick={() => setMobileNav(true)} aria-label="Mở menu chức năng đầy đủ">
+            <Menu size={20} />
+            <span>Thêm</span>
+          </button>
+        </>}
+        {role === 'lecturer' && <>
+          <Link to="/lecturer/dashboard" className={`mobile-tab ${section === 'dashboard' ? 'active' : ''}`}>
+            <LayoutDashboard size={20} />
+            <span>Tổng quan</span>
+          </Link>
+          <Link to="/lecturer/schedule" className={`mobile-tab ${section === 'schedule' ? 'active' : ''}`}>
+            <CalendarDays size={20} />
+            <span>Lịch dạy</span>
+          </Link>
+          <Link to="/lecturer/grades" className={`mobile-tab ${section === 'grades' ? 'active' : ''}`}>
+            <TableProperties size={20} />
+            <span>Sổ điểm</span>
+          </Link>
+          <Link to="/lecturer/profile" className={`mobile-tab ${section === 'profile' ? 'active' : ''}`}>
+            <UserRound size={20} />
+            <span>Hồ sơ</span>
+          </Link>
+          <button type="button" className="mobile-tab" onClick={() => setMobileNav(true)} aria-label="Mở menu chức năng">
+            <Menu size={20} />
+            <span>Thêm</span>
+          </button>
+        </>}
+        {role === 'staff' && <>
+          <Link to="/staff/dashboard" className={`mobile-tab ${section === 'dashboard' ? 'active' : ''}`}>
+            <LayoutDashboard size={20} />
+            <span>Tổng quan</span>
+          </Link>
+          <Link to="/staff/requests" className={`mobile-tab ${section === 'requests' ? 'active' : ''}`}>
+            <LifeBuoy size={20} />
+            <span>Yêu cầu</span>
+          </Link>
+          <Link to="/staff/tasks" className={`mobile-tab ${section === 'tasks' ? 'active' : ''}`}>
+            <ClipboardCheck size={20} />
+            <span>Công việc</span>
+          </Link>
+          <Link to="/staff/profile" className={`mobile-tab ${section === 'profile' ? 'active' : ''}`}>
+            <UserRound size={20} />
+            <span>Hồ sơ</span>
+          </Link>
+          <button type="button" className="mobile-tab" onClick={() => setMobileNav(true)} aria-label="Mở menu chức năng">
+            <Menu size={20} />
+            <span>Thêm</span>
+          </button>
+        </>}
+        {role === 'admin' && <>
+          <Link to="/admin/dashboard" className={`mobile-tab ${section === 'dashboard' ? 'active' : ''}`}>
+            <LayoutDashboard size={20} />
+            <span>Tổng quan</span>
+          </Link>
+          <Link to="/admin/users" className={`mobile-tab ${section === 'users' ? 'active' : ''}`}>
+            <Users size={20} />
+            <span>Tài khoản</span>
+          </Link>
+          <Link to="/admin/schedule" className={`mobile-tab ${section === 'schedule' ? 'active' : ''}`}>
+            <CalendarDays size={20} />
+            <span>Lớp học</span>
+          </Link>
+          <Link to="/admin/audit" className={`mobile-tab ${section === 'audit' ? 'active' : ''}`}>
+            <FileClock size={20} />
+            <span>Kiểm toán</span>
+          </Link>
+          <button type="button" className="mobile-tab" onClick={() => setMobileNav(true)} aria-label="Mở menu quản trị">
+            <Menu size={20} />
+            <span>Thêm</span>
+          </button>
+        </>}
+      </nav>
     </main>
   </div>;
 }

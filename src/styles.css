@@ -3754,25 +3754,25 @@ code {
 /* ==========================================================================
    RESPONSIVE MEDIA QUERIES
    ========================================================================== */
+/* ==========================================================================
+   RESPONSIVE MEDIA QUERIES (Mobile, Tablet & All Devices)
+   ========================================================================== */
+.mobile-bottom-bar {
+  display: none;
+}
+
 @media (max-width: 1200px) {
   .login-page {
     grid-template-columns: 1fr;
+    min-height: 100vh;
   }
   .login-story {
     display: none;
   }
   .login-panel {
     min-height: 100vh;
-  }
-  .mobile-brand {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .mobile-brand strong {
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--primary);
+    padding: 36px 24px 28px;
+    justify-content: center;
   }
   .dashboard-grid {
     grid-template-columns: 1fr;
@@ -3785,6 +3785,7 @@ code {
   }
   .dtu-student-card {
     position: static;
+    margin: 0 auto;
   }
   .curriculum-roadmap-container {
     grid-template-columns: 1fr;
@@ -3792,9 +3793,12 @@ code {
 }
 
 @media (max-width: 900px) {
+  /* Mobile Sidebar Drawer */
   .sidebar {
     transform: translateX(-100%);
-    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+    box-shadow: 12px 0 36px rgba(0, 0, 0, 0.2);
+    z-index: 40;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .sidebar.mobile-open {
     transform: translateX(0);
@@ -3802,12 +3806,15 @@ code {
   .mobile-backdrop {
     position: fixed;
     inset: 0;
-    z-index: 25;
-    background: rgba(15, 23, 42, 0.4);
+    z-index: 35;
+    background: rgba(15, 23, 42, 0.5);
     backdrop-filter: blur(4px);
     display: block;
     border: 0;
+    cursor: pointer;
   }
+
+  /* Main Shell */
   .main-area {
     width: 100%;
     margin-left: 0;
@@ -3815,18 +3822,83 @@ code {
   .mobile-menu-button {
     display: grid;
     place-items: center;
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-sm);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
     background: var(--surface);
     border: 1px solid var(--border);
     color: var(--text-main);
+    cursor: pointer;
+    flex: none;
+    transition: background 0.15s ease;
   }
+  .mobile-menu-button:active {
+    background: var(--surface-alt);
+  }
+
   .topbar {
     padding: 0 16px;
+    height: 60px;
   }
   .content-area {
-    padding: 20px 16px 36px;
+    padding: 16px 14px 84px !important;
+  }
+
+  /* Mobile Bottom Navigation Bar */
+  .mobile-bottom-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid #E2E8F0;
+    z-index: 30;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 4px;
+    box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.06);
+  }
+
+  .mobile-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    flex: 1;
+    height: 100%;
+    color: #64748B;
+    font-size: 10.5px;
+    font-weight: 600;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s ease, transform 0.1s ease;
+    padding: 4px 2px;
+  }
+
+  .mobile-tab:active {
+    transform: scale(0.94);
+  }
+
+  .mobile-tab.active {
+    color: #991B1B;
+    font-weight: 700;
+  }
+
+  .mobile-tab.active svg {
+    color: #991B1B;
+    stroke-width: 2.2;
+  }
+
+  /* Layout tweaks */
+  .banner {
+    padding: 24px 20px;
   }
   .banner-copy {
     max-width: 100%;
@@ -3848,11 +3920,85 @@ code {
 }
 
 @media (max-width: 640px) {
+  /* Topbar phone optimizations */
+  .topbar {
+    height: 54px;
+    padding: 0 12px;
+  }
+  .term-pill {
+    display: none;
+  }
+  .breadcrumb span, .breadcrumb svg {
+    display: none;
+  }
+  .breadcrumb strong {
+    font-size: 14.5px;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .topbar-user-info {
+    display: none;
+  }
+  .topbar-user-badge {
+    padding: 4px;
+    border: 0;
+    background: transparent;
+  }
+  .role-switch-button span {
+    display: none;
+  }
+  .role-switch-button {
+    padding: 0 8px;
+    height: 32px;
+  }
+
+  /* Login Card on Phone */
+  .login-panel {
+    padding: 24px 14px 20px;
+  }
+  .login-card {
+    padding: 26px 18px 22px;
+    border-radius: 18px;
+    margin: 0 auto;
+  }
+  .login-heading h2 {
+    font-size: 22px;
+  }
+  .login-heading p {
+    font-size: 12.5px;
+  }
+  .login-card-brand {
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+    gap: 10px;
+  }
+  .login-card-emblem-wrap {
+    width: 42px;
+    height: 42px;
+  }
+  .login-card-system-name {
+    font-size: 15px;
+  }
+  .login-card-university {
+    font-size: 9px;
+  }
+  .login-panel-footer {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+    font-size: 11px;
+  }
+
+  /* Content Cards & Tables */
   .stat-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
   .gpa-kpi-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
   .detail-meta-grid {
     grid-template-columns: 1fr;
@@ -3863,8 +4009,75 @@ code {
   .form-grid {
     grid-template-columns: 1fr;
   }
-  .demo-accounts-grid {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .page-header h2 {
+    font-size: 19px;
+  }
+  .data-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .toolbar-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .toolbar-actions button, .toolbar-actions a {
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+  }
+
+  /* Smooth Touch Tables */
+  .table-wrap {
+    margin: 0 -14px;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+  .data-table th, .data-table td {
+    padding: 10px 12px;
+    font-size: 12.5px;
+  }
+
+  /* Digital Student Card on Phone */
+  .dtu-student-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 18px 16px;
+    border-radius: 16px;
+  }
+  .card-chip-gold {
+    width: 38px;
+    height: 28px;
+  }
+
+  /* Modal cards on Phone */
+  .modal-card {
+    width: 95%;
+    max-height: 85vh;
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 420px) {
+  .stat-strip {
     grid-template-columns: 1fr;
+  }
+  .banner-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .banner-button {
+    width: 100%;
+    justify-content: center;
   }
 }
 
