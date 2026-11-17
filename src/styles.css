@@ -427,22 +427,23 @@ code {
 }
 
 .login-card-emblem-wrap {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 12px;
-  background: #FEF2F2;
-  border: 1px solid #FEE2E2;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
   display: grid;
   place-items: center;
   flex: none;
-  padding: 5px;
-  box-shadow: 0 2px 8px rgba(153, 27, 27, 0.08);
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
 }
 
 .login-card-emblem {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  display: block;
 }
 
 .login-card-brand-meta {
