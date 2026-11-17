@@ -1,0 +1,22 @@
+# Dependencies & Build Output
+node_modules/
+dist/
+dist-server/
+.vite/
+
+# Database files & dumps
+data/*
+!data/.gitkeep
+
+# Environment variables & credentials
+.env
+.env.local
+.env.*.local
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+.vscode/
+.idea/
