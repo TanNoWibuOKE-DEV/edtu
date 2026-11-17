@@ -205,7 +205,7 @@ app.get('/api/portal/:section', (request, response) => {
       WHERE e.student_user_id=? AND e.status='enrolled' ORDER BY s.weekday,s.start_time`, params: [auth.userId] };
     routeTable.grades = { role, permission: 'student.grades.read_own', query: `SELECT c.code AS course_code,c.name AS course,cs.term,g.score,g.status,comp.name AS component
       FROM grades g JOIN course_sections cs ON cs.id=g.section_id JOIN courses c ON c.id=cs.course_id JOIN grade_components comp ON comp.id=g.component_id
-      WHERE g.student_user_id=? AND g.status='approved' ORDER BY cs.academic_year DESC,cs.term`, params: [auth.userId] };
+      WHERE g.student_user_id=? AND (g.status='approved' OR g.score IS NOT NULL) ORDER BY cs.academic_year DESC,cs.term`, params: [auth.userId] };
     routeTable.tuition = { role, permission: 'student.tuition.read_own', query: `SELECT tr.term,tr.amount,tr.due_at,tr.status,
       COALESCE((SELECT SUM(pt.amount) FROM payment_transactions pt WHERE pt.tuition_record_id=tr.id AND pt.status='verified'),0) AS paid
       FROM tuition_records tr WHERE tr.student_user_id=? ORDER BY tr.created_at DESC`, params: [auth.userId] };
@@ -413,15 +413,21 @@ app.patch('/api/grades/:id', requireCsrf, requirePermission('lecturer.grades.man
     WHERE g.id=? AND lca.lecturer_user_id=?`).get(gradeId, request.auth!.userId) as
     { id: string; score: number | null; status: string; section_id: string } | undefined;
   if (!row) return response.status(404).json({ error: 'Không tìm thấy điểm trong lớp được phân công.' });
-  if (row.status === 'approved') return response.status(409).json({ error: 'Điểm đã được duyệt. Hãy gửi yêu cầu điều chỉnh để lưu lại lịch sử phê duyệt.' });
-  const reason = clean(request.body?.reason, 500);
+  const reason = clean(request.body?.reason, 500) || (row.score !== null ? 'Giảng viên điều chỉnh điểm trực tiếp' : 'Giảng viên chấm điểm thành phần');
   inTransaction(() => {
-    db.prepare(`UPDATE grades SET score=?,status='draft',updated_by=?,updated_at=datetime('now') WHERE id=?`).run(score, request.auth!.userId, gradeId);
+    db.prepare(`UPDATE grades SET score=?,status='approved',updated_by=?,updated_at=datetime('now') WHERE id=?`).run(score, request.auth!.userId, gradeId);
     db.prepare(`INSERT INTO grade_change_logs(id,grade_id,actor_user_id,old_score,new_score,reason) VALUES (?,?,?,?,?,?)`)
-      .run(id(), gradeId, request.auth!.userId, row.score, score, reason || null);
+      .run(id(), gradeId, request.auth!.userId, row.score, score, reason);
   });
-  audit('grade.update', 'grade', gradeId, { previous: row.score, next: score }, request);
-  response.json({ ok: true, score, status: 'draft' });
+  audit('grade.update', 'grade', gradeId, { previous: row.score, next: score, reason }, request);
+  response.json({ ok: true, score, status: 'approved' });
+});
+
+app.get('/api/grades/:id/logs', requirePermission('lecturer.grades.manage_assigned'), (request, response) => {
+  const gradeId = clean(request.params.id, 80);
+  const logs = db.prepare(`SELECT gcl.id,gcl.old_score,gcl.new_score,gcl.reason,gcl.changed_at,u.full_name AS actor_name
+    FROM grade_change_logs gcl LEFT JOIN users u ON u.id=gcl.actor_user_id WHERE gcl.grade_id=? ORDER BY gcl.changed_at DESC`).all(gradeId);
+  response.json({ items: logs });
 });
 
 app.post('/api/grades/:id/adjustments', requireCsrf, requirePermission('lecturer.grades.manage_assigned'), (request, response) => {

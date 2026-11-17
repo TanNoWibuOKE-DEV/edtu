@@ -247,11 +247,11 @@ code {
 }
 
 .story-content h1 {
-  margin: 20px 0 16px;
-  font-size: clamp(38px, 4.2vw, 56px);
+  margin: 18px 0 14px;
+  font-size: clamp(30px, 3.2vw, 42px);
   font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -1.5px;
+  line-height: 1.22;
+  letter-spacing: -0.8px;
 }
 
 .story-content h1 em {
@@ -263,10 +263,32 @@ code {
 }
 
 .story-content > p {
-  font-size: 16px;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 0 0 32px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.88);
+  margin: 0 0 26px;
+  max-width: 520px;
+}
+
+.story-features-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #FFE4E6;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 5px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
 }
 
 .story-stats-grid {
@@ -3844,4 +3866,76 @@ code {
   .demo-accounts-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Grade Audit Log Timeline */
+.highlight-save {
+  background: #059669 !important;
+  border-color: #047857 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3) !important;
+}
+
+.audit-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.audit-log-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 14px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+}
+
+.audit-log-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.score-badge {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.score-badge.old {
+  background: #F1F5F9;
+  color: #64748B;
+  text-decoration: line-through;
+}
+
+.score-badge.new {
+  background: #DCFCE7;
+  color: #15803D;
+  font-size: 14px;
+}
+
+.audit-log-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.audit-log-meta strong {
+  font-size: 13px;
+  color: #0F172A;
+}
+
+.audit-log-meta span {
+  font-size: 12px;
+  color: #475569;
+}
+
+.audit-log-meta small {
+  font-size: 11px;
+  color: #94A3B8;
 }

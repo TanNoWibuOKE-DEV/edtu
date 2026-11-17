@@ -79,7 +79,6 @@ const navigation: Record<PortalRole, NavItem[]> = {
     { key: 'education', label: 'Kế hoạch đào tạo', icon: BookOpen, group: 'Đào tạo & Học vụ' },
     { key: 'courses', label: 'Danh mục học phần', icon: BookMarked, group: 'Đào tạo & Học vụ' },
     { key: 'schedule', label: 'Lớp & Thời khóa biểu', icon: CalendarDays, group: 'Đào tạo & Học vụ' },
-    { key: 'grades', label: 'Phê duyệt bảng điểm', icon: TableProperties, group: 'Đào tạo & Học vụ', badge: 'Duyệt' },
     { key: 'finance', label: 'Quản lý tài chính', icon: WalletCards, group: 'Tài chính' },
     { key: 'news', label: 'Quản lý tin tức', icon: Newspaper, group: 'Truyền thông' },
     { key: 'permissions', label: 'Phân quyền vai trò', icon: ShieldCheck, group: 'Hệ thống' },
@@ -169,15 +168,14 @@ function LoginPage({ auth }: { auth: AuthState }) {
 
       <div className="story-content">
         <div className="eyebrow light">
-          <span className="live-dot" /> NỀN TẢNG ĐẠI HỌC SỐ TOÀN DIỆN
+          <span className="live-dot" /> TRƯỜNG ĐẠI HỌC DUY TÂN · TIÊN PHONG ĐỔI MỚI
         </div>
         <h1>
-          Một tài khoản.<br />
-          <em>Vận hành đại học thông minh.</em>
+          Hệ sinh thái học vụ số.<br />
+          <em>Khơi nguồn sáng tạo & tri thức.</em>
         </h1>
         <p>
-          Cổng thông tin tích hợp dành cho Sinh viên, Giảng viên, Cán bộ nhân viên và Ban Giám hiệu
-          trên một nền tảng thống nhất, bảo mật và hiện đại.
+          Cổng thông tin đào tạo & quản trị eDTU – Đồng hành cùng hơn 30.000 sinh viên và cán bộ giảng viên trong hành trình học tập, nghiên cứu và phát triển chuẩn quốc tế ABET.
         </p>
 
         <div className="story-stats-grid">
@@ -194,6 +192,12 @@ function LoginPage({ auth }: { auth: AuthState }) {
             <small>Số hóa quy trình học vụ</small>
           </div>
         </div>
+
+        <div className="story-features-row">
+          <span className="feature-pill"><CheckCircle2 size={13} /> Kiểm định quốc tế ABET</span>
+          <span className="feature-pill"><CheckCircle2 size={13} /> Dữ liệu học vụ tức thời</span>
+          <span className="feature-pill"><CheckCircle2 size={13} /> Bảo mật đa tầng TLS 1.3</span>
+        </div>
       </div>
 
       <div className="story-footer">
@@ -207,11 +211,6 @@ function LoginPage({ auth }: { auth: AuthState }) {
       <div className="login-panel-top">
         <div className="mobile-brand">
           <img src="/logo-dtu.png" alt="Đại học Duy Tân" className="mobile-dtu-logo" />
-        </div>
-        <div className="secure-badge-pill">
-          <span className="secure-badge-dot" />
-          <ShieldCheck size={14} />
-          <span>Cổng xác thực an toàn SSL 256-bit</span>
         </div>
       </div>
 
@@ -238,14 +237,19 @@ function LoginPage({ auth }: { auth: AuthState }) {
           </div>
         )}
 
-        <form className="login-form" onSubmit={submit}>
+        <form className="login-form" onSubmit={submit} autoComplete="off">
           <div className="form-group">
-            <label className="field-label" htmlFor="user-code">Mã tài khoản (User Code / Email)</label>
+            <label className="field-label" htmlFor="login-account">Mã tài khoản (User Code / Email)</label>
             <div className="field-wrap">
               <UserRound size={18} className="field-icon" />
               <input
-                id="user-code"
-                autoComplete="username"
+                id="login-account"
+                name="edtu_credential_account"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck={false}
+                data-lpignore="true"
                 value={userCode}
                 onChange={(event) => setUserCode(event.target.value)}
                 placeholder="VD: student, admin, lecturer..."
@@ -256,7 +260,7 @@ function LoginPage({ auth }: { auth: AuthState }) {
 
           <div className="form-group">
             <div className="field-row">
-              <label className="field-label" htmlFor="password">Mật khẩu</label>
+              <label className="field-label" htmlFor="login-password">Mật khẩu</label>
               <button
                 type="button"
                 className="text-button"
@@ -268,9 +272,11 @@ function LoginPage({ auth }: { auth: AuthState }) {
             <div className="field-wrap">
               <LockKeyhole size={18} className="field-icon" />
               <input
-                id="password"
+                id="login-password"
+                name="edtu_credential_password"
                 type={showPassword ? 'text' : 'password'}
-                autoComplete="current-password"
+                autoComplete="new-password"
+                data-lpignore="true"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="Nhập mật khẩu tài khoản"
@@ -576,7 +582,7 @@ function Dashboard({ role, session }: { role: PortalRole; session: Session }) {
             <Link to="/staff/tasks" className="banner-button secondary"><ClipboardCheck size={15} /> Công việc được giao</Link>
           </>}
           {role === 'admin' && <>
-            <Link to="/admin/grades" className="banner-button primary"><TableProperties size={15} /> Phê duyệt bảng điểm</Link>
+            <Link to="/admin/schedule" className="banner-button primary"><CalendarDays size={15} /> Lớp & Thời khóa biểu</Link>
             <Link to="/admin/users" className="banner-button secondary"><Users size={15} /> Quản trị người dùng</Link>
           </>}
         </div>
@@ -683,7 +689,7 @@ const dashboardSubtitle: Record<PortalRole, string> = {
   student: 'Theo dõi tiến độ học tập, lịch trình lớp học và các dịch vụ sinh viên.',
   lecturer: 'Quản lý lịch giảng dạy, lớp học phần, chấm bài tập và điểm số sinh viên.',
   staff: 'Theo dõi nhiệm vụ được giao, tiếp nhận và giải quyết yêu cầu sinh viên một cửa.',
-  admin: 'Quản lý tài khoản, đào tạo, phê duyệt bảng điểm và giám sát toàn hệ thống.',
+  admin: 'Quản lý tài khoản, đào tạo, lớp học vụ và giám sát toàn hệ thống.',
 };
 const bannerTitle: Record<PortalRole, string> = {
   student: 'Học kỳ 1 năm học 2026–2027 đang diễn ra.',
@@ -774,7 +780,7 @@ function PageView({ role, section, session }: { role: PortalRole; section: strin
   if (role === 'admin' && section === 'permissions') return <PermissionsPage session={session} />;
   if (role === 'admin' && section === 'units') return <UnitsPage session={session} />;
   if (role === 'admin' && ['education', 'courses', 'schedule'].includes(section)) return <AdminAcademicPage section={section} session={session} />;
-  if (role === 'admin' && section === 'grades') return <ApprovalsPage session={session} />;
+  if (role === 'admin' && section === 'grades') return <Navigate to="/admin/dashboard" replace />;
   if (role === 'admin' && section === 'finance') return <AdminFinancePage session={session} />;
   if (role === 'admin' && section === 'audit') return <AdminAuditPage session={session} />;
 
@@ -3238,119 +3244,70 @@ function AdminAcademicPage({ section, session }: { section: string; session: Ses
   </div>;
 }
 
-function ApprovalsPage({ session }: { session: Session }) {
-  const [items, setItems] = useState<Record<string, any>[]>([]);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-
-  const refresh = () => api<{ items: Record<string, any>[] }>('/api/grade-approvals').then((result) => setItems(result.items)).catch((reason) => setError((reason as Error).message));
-  useEffect(() => { void refresh(); }, []);
-
-  async function decide(item: Record<string, any>, decision: string) {
-    setError(''); setSuccess('');
-    try {
-      await api(`/api/grades/approvals/${item.id}`, { method: 'POST', body: JSON.stringify({ decision }) }, session.csrfToken);
-      setSuccess(`Đã ${decision === 'approved' ? 'phê duyệt' : 'từ chối'} đề nghị thành công!`);
-      await refresh();
-    } catch (reason) {
-      setError((reason as Error).message);
-    }
-  }
-
-  return <div className="page-stack">
-    <PageHeader title="Phê duyệt bảng điểm & Điều chỉnh điểm" subtitle="Hội đồng Khảo thí xem xét và phê duyệt bảng điểm do giảng viên gửi lên." eyebrow="QUẢN TRỊ KHẢO THÍ" />
-    {success && <div className="success-alert"><CheckCircle2 size={16} /><span>{success}</span></div>}
-    {error && <InlineAlert message={error} />}
-
-    <section className="surface data-surface">
-      <div className="data-toolbar">
-        <div>
-          <h3>Hàng đợi phê duyệt điểm</h3>
-          <span>{items.filter((i) => i.status === 'pending').length} đề nghị đang chờ quyết định</span>
-        </div>
-      </div>
-
-      <div className="table-wrap">
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Loại đề nghị</th>
-              <th>Lớp học phần</th>
-              <th>Giảng viên đề nghị</th>
-              <th>Thay đổi điểm</th>
-              <th>Ghi chú / Lý do</th>
-              <th>Thời gian gửi</th>
-              <th>Trạng thái</th>
-              <th>Quyết định</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((i) => <tr key={i.id}>
-              <td><span className="ticket-cat">{i.approval_type === 'adjustment' ? 'Điều chỉnh điểm' : 'Bảng điểm tổng kết'}</span></td>
-              <td><strong>{i.course}</strong> ({i.section})</td>
-              <td>{i.requested_by}</td>
-              <td>{i.approval_type === 'adjustment' ? <span className="score-change">{i.old_score ?? '—'} ➔ <strong>{i.proposed_score}</strong></span> : 'Toàn bảng điểm'}</td>
-              <td><small>{i.note || 'Không có ghi chú'}</small></td>
-              <td>{formatDateTime(i.created_at)}</td>
-              <td><StatusBadge status={i.status} /></td>
-              <td>
-                {i.status === 'pending' ? (
-                  <div className="row-actions">
-                    <button className="small-primary" onClick={() => void decide(i, 'approved')}><Check size={13} /> Duyệt</button>
-                    <button className="small-danger" onClick={() => void decide(i, 'rejected')}><X size={13} /> Từ chối</button>
-                  </div>
-                ) : (
-                  <span className="text-muted text-xs">Đã xử lý</span>
-                )}
-              </td>
-            </tr>)}
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </div>;
-}
-
 // -------------------------------------------------------------
 // LECTURER GRADES, ASSIGNMENTS, ATTENDANCE
 // -------------------------------------------------------------
 function LecturerGradesPage({ session }: { session: Session }) {
   const [items, setItems] = useState<Record<string, any>[]>([]);
   const [scores, setScores] = useState<Record<string, string>>({});
+  const [savingId, setSavingId] = useState('');
   const [saved, setSaved] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [logModalItem, setLogModalItem] = useState<Record<string, any> | null>(null);
+  const [logHistory, setLogHistory] = useState<Record<string, any>[]>([]);
+  const [loadingLogs, setLoadingLogs] = useState(false);
 
   const refresh = () => api<{ items: Record<string, any>[] }>('/api/portal/grades').then((res) => setItems(res.items || [])).catch((err) => setError((err as Error).message));
   useEffect(() => { void refresh(); }, []);
 
   async function saveScore(item: Record<string, any>) {
-    const scoreVal = Number(scores[item.id] ?? item.score);
+    const rawVal = scores[item.id] !== undefined ? scores[item.id] : item.score;
+    const scoreVal = Number(rawVal);
+    if (isNaN(scoreVal) || scoreVal < 0 || scoreVal > 10) {
+      setError('Điểm số phải là số hợp lệ từ 0 đến 10.');
+      return;
+    }
+    setError('');
+    setSavingId(item.id);
     try {
-      await api(`/api/grades/${item.id}`, { method: 'PATCH', body: JSON.stringify({ score: scoreVal }) }, session.csrfToken);
+      await api(`/api/grades/${item.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          score: scoreVal,
+          reason: item.score !== null ? `Giảng viên cập nhật điểm từ ${item.score} sang ${scoreVal}` : 'Giảng viên nhập điểm mới',
+        }),
+      }, session.csrfToken);
       setSaved(item.id);
-      setSuccess(`Đã lưu điểm cho sinh viên ${item.full_name}.`);
+      setSuccess(`Đã lưu điểm ${scoreVal} cho sinh viên ${item.full_name} (Hệ thống đã ghi nhật ký kiểm toán).`);
+      setTimeout(() => setSaved(''), 3000);
       await refresh();
     } catch (err) {
       setError((err as Error).message);
+    } finally {
+      setSavingId('');
     }
   }
 
-  async function submitForApproval(sectionCode: string) {
-    if (!window.confirm(`Gửi toàn bộ bảng điểm lớp ${sectionCode} lên Admin phê duyệt?`)) return;
+  async function viewLogs(item: Record<string, any>) {
+    setLogModalItem(item);
+    setLoadingLogs(true);
     try {
-      await api(`/api/grades/submit/${encodeURIComponent(sectionCode)}`, { method: 'POST', body: JSON.stringify({}) }, session.csrfToken);
-      setSuccess(`Đã gửi bảng điểm lớp ${sectionCode} để duyệt!`);
-      await refresh();
-    } catch (err) {
-      setError((err as Error).message);
+      const data = await api<{ items: Record<string, any>[] }>(`/api/grades/${item.id}/logs`);
+      setLogHistory(data.items || []);
+    } catch {
+      setLogHistory([]);
+    } finally {
+      setLoadingLogs(false);
     }
   }
-
-  const sections = [...new Set(items.map((i) => i.section))];
 
   return <div className="page-stack">
-    <PageHeader title="Sổ điểm điện tử & Nhập điểm sinh viên" subtitle="Nhập điểm thành phần cho các lớp học phần được phân công, lưu nháp hoặc gửi phê duyệt." eyebrow="NGHIỆP VỤ GIẢNG VIÊN" />
+    <PageHeader
+      title="Sổ điểm điện tử & Nhập điểm sinh viên"
+      subtitle="Giảng viên chủ động nhập và chỉnh sửa điểm trực tiếp. Mọi lần thay đổi điểm đều được tự động lưu nhật ký kiểm toán an toàn."
+      eyebrow="NGHIỆP VỤ GIẢNG VIÊN"
+    />
     {success && <div className="success-alert"><CheckCircle2 size={16} /><span>{success}</span></div>}
     {error && <InlineAlert message={error} />}
 
@@ -3358,14 +3315,7 @@ function LecturerGradesPage({ session }: { session: Session }) {
       <div className="data-toolbar">
         <div>
           <h3>Bảng điểm các lớp học phần</h3>
-          <span>{items.length} đầu điểm thành phần</span>
-        </div>
-        <div className="toolbar-actions">
-          {sections.map((sec) => (
-            <button key={sec} className="secondary-button" onClick={() => void submitForApproval(sec)}>
-              <Send size={14} /> Gửi duyệt lớp {sec}
-            </button>
-          ))}
+          <span>{items.length} đầu điểm thành phần · Tự động đồng bộ học vụ</span>
         </div>
       </div>
 
@@ -3377,46 +3327,109 @@ function LecturerGradesPage({ session }: { session: Session }) {
               <th>Mã SV</th>
               <th>Lớp học phần</th>
               <th>Thành phần điểm</th>
-              <th>Điểm số (0–10)</th>
+              <th style={{ width: 140 }}>Điểm (0–10)</th>
               <th>Trạng thái</th>
               <th>Thao tác</th>
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => (
-              <tr key={item.id}>
-                <td><strong>{item.full_name}</strong></td>
-                <td><code>{item.user_code}</code></td>
-                <td>{item.course} · <code>{item.section}</code></td>
-                <td><strong>{item.component}</strong></td>
-                <td>
-                  <input
-                    className="score-input-box"
-                    type="number"
-                    min="0"
-                    max="10"
-                    step="0.1"
-                    disabled={item.status === 'approved'}
-                    value={scores[item.id] !== undefined ? scores[item.id] : (item.score ?? '')}
-                    onChange={(e) => setScores({ ...scores, [item.id]: e.target.value })}
-                  />
-                </td>
-                <td><StatusBadge status={item.status} /></td>
-                <td>
-                  {item.status !== 'approved' ? (
-                    <button className="small-primary" onClick={() => void saveScore(item)}>
-                      {saved === item.id ? '✓ Đã lưu' : 'Lưu nháp'}
-                    </button>
-                  ) : (
-                    <span className="text-muted text-xs">Đã duyệt (Khóa)</span>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {items.map((item) => {
+              const currentVal = scores[item.id] !== undefined ? scores[item.id] : (item.score ?? '');
+              const isModified = scores[item.id] !== undefined && Number(scores[item.id]) !== Number(item.score);
+              return (
+                <tr key={item.id}>
+                  <td><strong>{item.full_name}</strong></td>
+                  <td><code>{item.user_code}</code></td>
+                  <td>{item.course} · <code>{item.section}</code></td>
+                  <td><span className="ticket-cat">{item.component}</span></td>
+                  <td>
+                    <input
+                      className="score-input-box"
+                      type="number"
+                      min="0"
+                      max="10"
+                      step="0.1"
+                      value={currentVal}
+                      onChange={(e) => setScores({ ...scores, [item.id]: e.target.value })}
+                      placeholder="—"
+                      title="Nhập điểm từ 0 đến 10"
+                    />
+                  </td>
+                  <td>
+                    <span className="badge-pill badge-primary">
+                      {item.score !== null ? `Đã có điểm (${item.score})` : 'Chưa nhập'}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="row-actions">
+                      <button
+                        className={`small-primary ${isModified ? 'highlight-save' : ''}`}
+                        onClick={() => void saveScore(item)}
+                        disabled={savingId === item.id}
+                      >
+                        {savingId === item.id ? <span className="spinner" /> : saved === item.id ? '✓ Đã lưu' : isModified ? 'Lưu thay đổi' : 'Cập nhật'}
+                      </button>
+                      <button
+                        type="button"
+                        className="small-secondary"
+                        onClick={() => void viewLogs(item)}
+                        title="Xem lịch sử chỉnh sửa điểm"
+                      >
+                        <FileClock size={13} /> Nhật ký
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
     </section>
+
+    {logModalItem && (
+      <div className="modal-backdrop" onClick={() => setLogModalItem(null)}>
+        <div className="modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 640 }}>
+          <div className="modal-header">
+            <div>
+              <h3>Nhật ký chỉnh sửa điểm</h3>
+              <p>{logModalItem.full_name} ({logModalItem.user_code}) — {logModalItem.course} ({logModalItem.component})</p>
+            </div>
+            <button type="button" className="icon-button" onClick={() => setLogModalItem(null)}><X size={18} /></button>
+          </div>
+          <div className="modal-body" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+            {loadingLogs ? (
+              <div className="loading-state"><span className="spinner" /><span>Đang tải nhật ký kiểm toán...</span></div>
+            ) : logHistory.length === 0 ? (
+              <div className="empty-state">
+                <FileClock size={32} />
+                <p>Chưa có lịch sử điều chỉnh điểm nào cho mục này.</p>
+              </div>
+            ) : (
+              <div className="audit-timeline">
+                {logHistory.map((log) => (
+                  <div key={log.id} className="audit-log-item">
+                    <div className="audit-log-badge">
+                      <span className="score-badge old">{log.old_score !== null ? log.old_score : 'Trống'}</span>
+                      <span className="arrow">➔</span>
+                      <span className="score-badge new">{log.new_score}</span>
+                    </div>
+                    <div className="audit-log-meta">
+                      <strong>{log.actor_name || 'Giảng viên'}</strong>
+                      <span>{log.reason || 'Cập nhật điểm trực tiếp'}</span>
+                      <small>{formatDateTime(log.changed_at)}</small>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="modal-footer">
+            <button type="button" className="secondary-button" onClick={() => setLogModalItem(null)}>Đóng</button>
+          </div>
+        </div>
+      </div>
+    )}
   </div>;
 }
 
